@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://img.icons8.com/color/48/checklist.png" type="image/svg+xml"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation des Routes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .route {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .route h2 {
+            margin: 0;
+        }
+        .route.get {
+            border-left: 5px solid #28a745; /* Vert pour GET */
+        }
+        .route.post {
+            border-left: 5px solid #007bff; /* Bleu pour POST */
+        }
+        .route.put {
+            border-left: 5px solid #ffc107; /* Jaune pour PUT */
+        }
+        .route.delete {
+            border-left: 5px solid #dc3545; /* Rouge pour DELETE */
+        }
+        .route p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentation des Routes de l'Application</h1>
+    <h3>NB: Aucune requete vers cette api ne sera traiter sans la connexion</h3>
+
+    <div class="route get">
+        <h2>GET /api/typesTaches</h2>
+        <p>Récupère la liste des types de tâches.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/typesTaches/:id</h2>
+        <p>Récupère un type de tâche par ID.</p>
+    </div>
+    <div class="route post">
+        <h2>POST /api/typesTaches</h2>
+        <p>Crée un nouveau type de tâche.</p>
+    </div>
+    <div class="route put">
+        <h2>PUT /api/typesTaches/:id</h2>
+        <p>Met à jour un type de tâche existant.</p>
+    </div>
+    <div class="route delete">
+        <h2>DELETE /api/typesTaches/:id</h2>
+        <p>Supprime un type de tâche.</p>
+    </div>
+
+    <div class="route get">
+        <h2>GET /api/taches</h2>
+        <p>Récupère la liste des tâches.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/filterAdmin/taches</h2>
+        <p>Récupère les tâches filtrées pour les administrateurs.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/taches/getAllforResp</h2>
+        <p>Récupère toutes les tâches du responsable connecté.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/filter/taches</h2>
+        <p>Filtre les tâches.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/search/taches</h2>
+        <p>Recherche des tâches.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/taches/:id</h2>
+        <p>Récupère une tâche par ID.</p>
+    </div>
+    <div class="route post">
+        <h2>POST /api/taches</h2>
+        <p>Ajoute une nouvelle tâche.</p>
+    </div>
+    <div class="route put">
+        <h2>PUT /api/taches/:id</h2>
+        <p>Modifie une tâche existante.</p>
+    </div>
+    <div class="route delete">
+        <h2>DELETE /api/taches/:id</h2>
+        <p>Supprime une tâche.</p>
+    </div>
+
+    <div class="route get">
+        <h2>GET /api/responsables/log</h2>
+        <p>Récupère un responsable par ID.</p>
+    </div>
+
+    <div class="route get">
+        <h2>GET /api/projets</h2>
+        <p>Récupère la liste des projets.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/statusProjets/:id/projets</h2>
+        <p>Récupère les projets par statut.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/projets/:id</h2>
+        <p>Récupère un projet par ID.</p>
+    </div>
+    <div class="route post">
+        <h2>POST /api/projets</h2>
+        <p>Ajoute un nouveau projet.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/search/projets</h2>
+        <p>Recherche un projet.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/filter/projets</h2>
+        <p>Filtre les projets.</p>
+    </div>
+    <div class="route put">
+        <h2>PUT /api/projets/:id</h2>
+        <p>Met à jour un projet existant.</p>
+    </div>
+    <div class="route delete">
+        <h2>DELETE /api/projets/:id</h2>
+        <p>Supprime un projet.</p>
+    </div>
+
+    <div class="route post">
+        <h2>POST /api/profiles/auth</h2>
+        <p>Route de connexion.</p>
+    </div>
+    <div class="route put">
+        <h2>PUT /api/profiles/auth/updatePassword</h2>
+        <p>Met à jour le mot de passe d'un profil.</p>
+    </div>
+    <div class="route post">
+        <h2>POST /api/profiles/logout</h2>
+        <p>Déconnexion d'un profil.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/profiles/log</h2>
+        <p>Récupère un profil par ID.</p>
+    </div>
+
+    <div class="route get">
+        <h2>GET /api/observations</h2>
+        <p>Récupère la liste des observations.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/projets/:id/observations</h2>
+        <p>Récupère toutes les observations d'un projet.</p>
+    </div>
+    <div class="route get">
+        <h2>GET /api/observations/:id</h2>
+        <p>Récupère une observation par ID.</p>
+    </div>
+    <div class="route post">
+        <h2>POST /api/observations</h2>
+        <p>Ajoute une nouvelle observation.</p>
+    </div>
+    <div class="route put">
+        <h2>PUT /api/observations/:id</h2>
+        <p>Met à jour une observation existante.</p>
+    </div>
+    <div class="route delete">
+        <h2>DELETE /api/observations/:id</h2>
+        <p>Supprime une observation.</p>
+    </div>
+</body>
+</html>

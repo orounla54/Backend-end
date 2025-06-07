@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\LENOVO\\Desktop\\E2C-TIC\\Backend\\logs\\.3807ee141b708d1690ad9aa3789c722e696b3c22-audit.json",
+    "files": [
+        {
+            "date": 1748521021890,
+            "name": "C:\\Users\\LENOVO\\Desktop\\E2C-TIC\\Backend\\logs\\combined-2025-05-29.log",
+            "hash": "21ef0116c9c062866059d3727b98a65b40cc9462273295d64e8ece869d71dd8a"
+        },
+        {
+            "date": 1748565186702,
+            "name": "C:\\Users\\LENOVO\\Desktop\\E2C-TIC\\Backend\\logs\\combined-2025-05-30.log",
+            "hash": "eb1fbd97ad5c229094c9b6087ef865238e89cccd8abd26fed191bccf37999071"
+        },
+        {
+            "date": 1749070845511,
+            "name": "C:\\Users\\LENOVO\\Desktop\\E2C-TIC\\Backend\\logs\\combined-2025-06-04.log",
+            "hash": "c7de85e02b2e698506ed878b3e6a9b9934964355c44328099cf4d67418ce3b75"
+        },
+        {
+            "date": 1749120611106,
+            "name": "C:\\Users\\LENOVO\\Desktop\\E2C-TIC\\Backend\\logs\\combined-2025-06-05.log",
+            "hash": "82473d851d972fc40ba37e3ef4830d53a1788aab9746ea4350c883f3a434f259"
+        }
+    ],
+    "hashType": "sha256"
+}
