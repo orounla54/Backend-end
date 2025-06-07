@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const logSchema = mongoose.Schema({
+const logSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -11,12 +11,16 @@ const logSchema = mongoose.Schema({
         required: true
     },
     details: {
-        type: Object
+        type: String
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    ip: {
+        type: String
+    },
+    userAgent: {
+        type: String
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('Log', logSchema); 
