@@ -15,22 +15,8 @@ const compression = require('compression');
 const { errorHandler } = require('./middlewares/error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-// Routes
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
-const messageRoutes = require('./routes/messages');
-const discussionRoutes = require('./routes/discussionsRou');
-const tacheRoutes = require('./routes/tachesRou');
-const projetRoutes = require('./routes/projetsRou');
-const profilesRoutes = require('./routes/profilesRou');
-const typesTacheRoutes = require('./routes/typesTacheRou');
-const evenementRoutes = require('./routes/evenementsRou');
-const prioriteRoutes = require('./routes/prioritesRou');
-const responsableRoutes = require('./routes/responsablesRou');
-const uploadRoutes = require('./routes/upload');
-const serviceRoutes = require('./routes/service');
-const posteRoutes = require('./routes/poste');
-const positionRoutes = require('./routes/position');
+// Importer le router principal
+const apiRoutes = require('./routes');
 
 const app = express();
 
@@ -122,21 +108,7 @@ app.get('/api-docs', swaggerUi.setup(swaggerSpecs, {
 }));
 
 // Routes API
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/messages', messageRoutes);
-app.use('/api/discussions', discussionRoutes);
-app.use('/api/taches', tacheRoutes);
-app.use('/api/projets', projetRoutes);
-app.use('/api/profiles', profilesRoutes);
-app.use('/api/typesTaches', typesTacheRoutes);
-app.use('/api/evenements', evenementRoutes);
-app.use('/api/priorites', prioriteRoutes);
-app.use('/api/responsables', responsableRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/postes', posteRoutes);
-app.use('/api/positions', positionRoutes);
+app.use('/api', apiRoutes);
 
 // Route de base
 app.get('/', (req, res) => {

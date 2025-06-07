@@ -1,202 +1,40 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const auth = require('../middlewares/auth');
-const Tache = require("../models/Tache");
+const auth = require("../middlewares/auth");
+const TacheController = require("../controllers/tachesCon");
 
-// Créer une tâche
-router.post("/", auth.protect, async (req, res) => {
-    try {
-        const tache = new Tache({
-            titre: req.body.titre,
-            description: req.body.description,
-            dateDebut: req.body.dateDebut,
-            dateFin: req.body.dateFin,
-            statut: req.body.statut || 'en_attente',
-            priorite: req.body.priorite || 'moyenne',
-            responsable: req.user.id,
-            projet: req.body.projetId
-        });
-        await tache.save();
-        res.status(201).json(tache);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes de recherche et filtrage (doivent être avant /:id)
+router.get("/search", auth.protect, TacheController.search);
+router.get("/filter", auth.protect, TacheController.filter);
 
-// Obtenir toutes les tâches
-router.get("/", auth.protect, async (req, res) => {
-    try {
-        const taches = await Tache.find()
-            .populate('responsable', 'username profilePicture')
-            .populate('projet')
-            .sort({ createdAt: -1 });
-        res.json(taches);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes principales
+router.get("/", auth.protect, TacheController.getAll);
+router.post("/", auth.protect, TacheController.create);
+router.get("/:id", auth.protect, TacheController.getById);
+router.put("/:id", auth.protect, TacheController.update);
+router.delete("/:id", auth.protect, TacheController.delete);
 
-// Obtenir les tâches d'un projet
-router.get("/projet/:projetId", auth.protect, async (req, res) => {
-    try {
-        const taches = await Tache.find({ projet: req.params.projetId })
-            .populate('responsable', 'username profilePicture')
-            .sort({ createdAt: -1 });
-        res.json(taches);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les sous-tâches
+router.get("/:id/sous-taches", auth.protect, TacheController.getSousTaches);
+router.post("/:id/sous-taches", auth.protect, TacheController.addSousTache);
 
-// Obtenir les tâches d'un utilisateur
-router.get("/user", auth.protect, async (req, res) => {
-    try {
-        const taches = await Tache.find({ responsable: req.user.id })
-            .populate('projet')
-            .sort({ createdAt: -1 });
-        res.json(taches);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les documents
+router.get("/:id/documents", auth.protect, TacheController.getDocuments);
+router.post("/:id/documents", auth.protect, TacheController.addDocument);
+router.delete("/:id/documents/:docId", auth.protect, TacheController.deleteDocument);
 
-// Obtenir une tâche spécifique
-router.get("/:id", auth.protect, async (req, res) => {
-    try {
-        const tache = await Tache.findById(req.params.id)
-            .populate('responsable', 'username profilePicture')
-            .populate('projet')
-            .populate('sousTaches');
-        if (!tache) {
-            return res.status(404).json({ message: "Tâche non trouvée" });
-        }
-        res.json(tache);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les images
+router.get("/:id/images", auth.protect, TacheController.getImages);
+router.post("/:id/images", auth.protect, TacheController.addImage);
+router.delete("/:id/images/:imageId", auth.protect, TacheController.deleteImage);
 
-// Mettre à jour une tâche
-router.put("/:id", auth.protect, async (req, res) => {
-    try {
-        const tache = await Tache.findById(req.params.id);
-        if (!tache) {
-            return res.status(404).json({ message: "Tâche non trouvée" });
-        }
-        if (tache.responsable.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Non autorisé" });
-        }
+// Routes pour les discussions
+router.get("/:id/discussions", auth.protect, TacheController.getDiscussions);
+router.post("/:id/discussions", auth.protect, TacheController.addDiscussion);
 
-        const updates = {
-            titre: req.body.titre || tache.titre,
-            description: req.body.description || tache.description,
-            dateDebut: req.body.dateDebut || tache.dateDebut,
-            dateFin: req.body.dateFin || tache.dateFin,
-            statut: req.body.statut || tache.statut,
-            priorite: req.body.priorite || tache.priorite
-        };
-
-        Object.assign(tache, updates);
-        await tache.save();
-        res.json(tache);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Supprimer une tâche
-router.delete("/:id", auth.protect, async (req, res) => {
-    try {
-        const tache = await Tache.findById(req.params.id);
-        if (!tache) {
-            return res.status(404).json({ message: "Tâche non trouvée" });
-        }
-        if (tache.responsable.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Non autorisé" });
-        }
-        await tache.deleteOne();
-        res.json({ message: "Tâche supprimée" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Route de recherche
-router.get("/search", auth.protect, async (req, res) => {
-    try {
-        const keyword = req.query.keyword || '';
-        const taches = await Tache.find({
-            $or: [
-                { titre: { $regex: keyword, $options: 'i' } },
-                { description: { $regex: keyword, $options: 'i' } }
-            ]
-        })
-        .populate('responsable', 'username profilePicture')
-        .populate('projet')
-        .sort({ createdAt: -1 });
-        res.json(taches);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Route de filtrage
-router.get("/filter", auth.protect, async (req, res) => {
-    try {
-        const { dateDebut, idStatusTache, keyword, important, urgent, private: isPrivate } = req.query;
-        let query = {};
-
-        // Handle date filter
-        if (dateDebut) {
-            try {
-                const startDate = new Date(dateDebut);
-                if (!isNaN(startDate.getTime())) {
-                    query.dateDebut = { $gte: startDate };
-                }
-            } catch (error) {
-                console.error('Invalid date format:', error);
-            }
-        }
-
-        // Handle status filter
-        if (idStatusTache) {
-            query.statut = idStatusTache;
-        }
-
-        // Handle keyword search
-        if (keyword) {
-            query.$or = [
-                { titre: { $regex: keyword, $options: 'i' } },
-                { description: { $regex: keyword, $options: 'i' } }
-            ];
-        }
-
-        // Handle boolean filters
-        if (important !== undefined) {
-            query.important = important === 'true';
-        }
-        if (urgent !== undefined) {
-            query.urgent = urgent === 'true';
-        }
-        if (isPrivate !== undefined) {
-            query.private = isPrivate === 'true';
-        }
-
-        console.log('Filter query:', query); // Debug log
-
-        const taches = await Tache.find(query)
-            .populate('responsable', 'username profilePicture')
-            .populate('projet')
-            .sort({ createdAt: -1 });
-            
-        res.json(taches);
-    } catch (error) {
-        console.error('Filter error:', error); // Debug log
-        res.status(500).json({ 
-            message: "Erreur lors du filtrage des tâches",
-            error: error.message 
-        });
-    }
-});
+// Routes pour les responsables
+router.get("/:id/responsables", auth.protect, TacheController.getResponsables);
+router.post("/:id/responsables", auth.protect, TacheController.addResponsable);
+router.delete("/:id/responsables/:responsableId", auth.protect, TacheController.removeResponsable);
 
 module.exports = router;

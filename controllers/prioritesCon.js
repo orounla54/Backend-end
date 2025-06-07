@@ -4,7 +4,7 @@ const Preuve = require('../models/Preuve');
 const fs = require('fs').promises;
 
 // === PRIORITES ===
-const getAllPriorite = async (req, res) => {
+exports.getAllPriorite = async (req, res) => {
     try {
         const priorites = await Priorite.find().populate('typePriorite');
         res.json(priorites);
@@ -13,7 +13,7 @@ const getAllPriorite = async (req, res) => {
     }
 };
 
-const getAllPrioriteForResponsables = async (req, res) => {
+exports.getAllPrioriteForResponsables = async (req, res) => {
     try {
         const priorites = await Priorite.find({ responsable: req.user._id }).populate('typePriorite');
         res.json(priorites);
@@ -22,7 +22,7 @@ const getAllPrioriteForResponsables = async (req, res) => {
     }
 };
 
-const getAllPrioriteForServices = async (req, res) => {
+exports.getAllPrioriteForServices = async (req, res) => {
     try {
         const priorites = await Priorite.find({ service: req.user.service }).populate('typePriorite');
         res.json(priorites);
@@ -31,7 +31,7 @@ const getAllPrioriteForServices = async (req, res) => {
     }
 };
 
-const getByIdPriorite = async (req, res) => {
+exports.getByIdPriorite = async (req, res) => {
     try {
         const priorite = await Priorite.findById(req.params.id).populate('typePriorite');
         if (!priorite) return res.status(404).json({ message: 'Priorité non trouvée' });
@@ -41,7 +41,7 @@ const getByIdPriorite = async (req, res) => {
     }
 };
 
-const getTachesForPriorite = async (req, res) => {
+exports.getTachesForPriorite = async (req, res) => {
     try {
         const priorite = await Priorite.findById(req.params.idPriorite).populate({
             path: 'taches',
@@ -54,7 +54,7 @@ const getTachesForPriorite = async (req, res) => {
     }
 };
 
-const getResponsablesByPriorite = async (req, res) => {
+exports.getResponsablesByPriorite = async (req, res) => {
     try {
         const priorite = await Priorite.findById(req.params.idPriorite).populate('responsable', 'nom prenom email');
         if (!priorite) return res.status(404).json({ message: 'Priorité non trouvée' });
@@ -64,7 +64,7 @@ const getResponsablesByPriorite = async (req, res) => {
     }
 };
 
-const newPriorite = async (req, res) => {
+exports.newPriorite = async (req, res) => {
     try {
         const priorite = new Priorite({ ...req.body, createdAt: new Date(), updatedAt: new Date() });
         const savedPriorite = await priorite.save();
@@ -74,7 +74,7 @@ const newPriorite = async (req, res) => {
     }
 };
 
-const updatePriorite = async (req, res) => {
+exports.updatePriorite = async (req, res) => {
     try {
         const updated = await Priorite.findByIdAndUpdate(
             req.params.id,
@@ -88,7 +88,7 @@ const updatePriorite = async (req, res) => {
     }
 };
 
-const deletePriorite = async (req, res) => {
+exports.deletePriorite = async (req, res) => {
     try {
         const deleted = await Priorite.findByIdAndDelete(req.params.id);
         if (!deleted) return res.status(404).json({ message: 'Priorité non trouvée' });
@@ -98,7 +98,7 @@ const deletePriorite = async (req, res) => {
     }
 };
 
-const addRespPriorite = async (req, res) => {
+exports.addRespPriorite = async (req, res) => {
     try {
         const { prioriteId, responsableId } = req.body;
         const priorite = await Priorite.findById(prioriteId);
@@ -114,7 +114,7 @@ const addRespPriorite = async (req, res) => {
     }
 };
 
-const removeRespPriorite = async (req, res) => {
+exports.removeRespPriorite = async (req, res) => {
     try {
         const priorite = await Priorite.findById(req.params.idPriorite);
         if (!priorite) return res.status(404).json({ message: 'Priorité non trouvée' });
@@ -130,7 +130,7 @@ const removeRespPriorite = async (req, res) => {
 };
 
 // === PREUVES ===
-const addPreuves = async (req, res) => {
+exports.addPreuves = async (req, res) => {
     try {
         if (!req.files?.length) return res.status(400).json({ message: 'Aucun fichier fourni' });
 
@@ -155,7 +155,7 @@ const addPreuves = async (req, res) => {
     }
 };
 
-const addDocumentIndividually = async (req, res) => {
+exports.addDocumentIndividually = async (req, res) => {
     try {
         if (!req.files?.length) return res.status(400).json({ message: 'Aucun fichier fourni' });
 
@@ -178,7 +178,7 @@ const addDocumentIndividually = async (req, res) => {
     }
 };
 
-const deletePreuveWithDocuments = async (req, res) => {
+exports.deletePreuveWithDocuments = async (req, res) => {
     try {
         const preuve = await Preuve.findById(req.params.idPreuve);
         if (!preuve) return res.status(404).json({ message: 'Preuve non trouvée' });
@@ -198,7 +198,7 @@ const deletePreuveWithDocuments = async (req, res) => {
     }
 };
 
-const deleteDocumentPreuve = async (req, res) => {
+exports.deleteDocumentPreuve = async (req, res) => {
     try {
         const preuve = await Preuve.findById(req.params.idPreuve);
         if (!preuve) return res.status(404).json({ message: 'Preuve non trouvée' });
@@ -222,7 +222,7 @@ const deleteDocumentPreuve = async (req, res) => {
     }
 };
 
-const updatePreuves = async (req, res) => {
+exports.updatePreuves = async (req, res) => {
     try {
         const updated = await Preuve.findByIdAndUpdate(
             req.params.idPreuve,
@@ -236,7 +236,7 @@ const updatePreuves = async (req, res) => {
     }
 };
 
-const getPreuves = async (req, res) => {
+exports.getPreuves = async (req, res) => {
     try {
         const preuves = await Preuve.find({ priorite: req.params.idPriorite });
         res.json(preuves);
@@ -245,7 +245,7 @@ const getPreuves = async (req, res) => {
     }
 };
 
-const getPreuvesDocuments = async (req, res) => {
+exports.getPreuvesDocuments = async (req, res) => {
     try {
         const preuve = await Preuve.findById(req.params.idPreuve);
         if (!preuve) return res.status(404).json({ message: 'Preuve non trouvée' });
@@ -255,8 +255,8 @@ const getPreuvesDocuments = async (req, res) => {
     }
 };
 
-// === TYPES DE PRIORITÉ ===
-const getAllTypePriorite = async (req, res) => {
+// === TYPES DE PRIORITE ===
+exports.getAllTypePriorite = async (req, res) => {
     try {
         const types = await TypePriorite.find();
         res.json(types);
@@ -265,7 +265,7 @@ const getAllTypePriorite = async (req, res) => {
     }
 };
 
-const getByIdTypePriorite = async (req, res) => {
+exports.getByIdTypePriorite = async (req, res) => {
     try {
         const type = await TypePriorite.findById(req.params.id);
         if (!type) return res.status(404).json({ message: 'Type de priorité non trouvé' });
@@ -275,7 +275,7 @@ const getByIdTypePriorite = async (req, res) => {
     }
 };
 
-const createTypePriorite = async (req, res) => {
+exports.createTypePriorite = async (req, res) => {
     try {
         const type = new TypePriorite({ ...req.body, createdAt: new Date(), updatedAt: new Date() });
         const savedType = await type.save();
@@ -285,7 +285,7 @@ const createTypePriorite = async (req, res) => {
     }
 };
 
-const updateTypePriorite = async (req, res) => {
+exports.updateTypePriorite = async (req, res) => {
     try {
         const updated = await TypePriorite.findByIdAndUpdate(
             req.params.id,
@@ -299,7 +299,7 @@ const updateTypePriorite = async (req, res) => {
     }
 };
 
-const deleteTypePriorite = async (req, res) => {
+exports.deleteTypePriorite = async (req, res) => {
     try {
         const deleted = await TypePriorite.findByIdAndDelete(req.params.id);
         if (!deleted) return res.status(404).json({ message: 'Type de priorité non trouvé' });
@@ -307,30 +307,4 @@ const deleteTypePriorite = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
-
-module.exports = {
-    getAllPriorite,
-    getAllPrioriteForResponsables,
-    getAllPrioriteForServices,
-    getByIdPriorite,
-    getTachesForPriorite,
-    getResponsablesByPriorite,
-    newPriorite,
-    updatePriorite,
-    deletePriorite,
-    addRespPriorite,
-    removeRespPriorite,
-    addPreuves,
-    addDocumentIndividually,
-    deletePreuveWithDocuments,
-    deleteDocumentPreuve,
-    updatePreuves,
-    getPreuves,
-    getPreuvesDocuments,
-    getAllTypePriorite,
-    getByIdTypePriorite,
-    createTypePriorite,
-    updateTypePriorite,
-    deleteTypePriorite
 };

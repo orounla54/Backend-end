@@ -1,11 +1,8 @@
 const mongoose = require('mongoose');
 
 const serviceSchema = new mongoose.Schema({
-  libelle: {
-    type: String,
-    required: true,
-    trim: true
-  }
+  nom: { type: String, required: true, unique: true },
+  description: { type: String, required: true }
 }, {
   timestamps: true
 });

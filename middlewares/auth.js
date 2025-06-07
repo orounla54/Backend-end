@@ -31,7 +31,10 @@ exports.protect = async (req, res, next) => {
 
         if (!token) {
             logger.warn('Tentative d\'accès non autorisé', { ip: req.ip, path: req.path });
-            throw new AppError('Non autorisé. Veuillez vous connecter.', 401);
+            return res.status(401).json({
+                status: 'error',
+                message: 'Non autorisé. Veuillez vous connecter.'
+            });
         }
 
         // 2. Vérifier la validité du token
@@ -40,17 +43,26 @@ exports.protect = async (req, res, next) => {
         // 3. Vérifier si l'utilisateur existe toujours
         const currentUser = await User.findById(decoded.id).select('+lastLogin');
         if (!currentUser) {
-            throw new AppError('L\'utilisateur associé à ce token n\'existe plus.', 401);
+            return res.status(401).json({
+                status: 'error',
+                message: 'L\'utilisateur associé à ce token n\'existe plus.'
+            });
         }
 
         // 4. Vérifier si l'utilisateur a changé son mot de passe après la création du token
         if (currentUser.changedPasswordAfter(decoded.iat)) {
-            throw new AppError('L\'utilisateur a changé son mot de passe. Veuillez vous reconnecter.', 401);
+            return res.status(401).json({
+                status: 'error',
+                message: 'L\'utilisateur a changé son mot de passe. Veuillez vous reconnecter.'
+            });
         }
 
         // 5. Vérifier si le compte est actif
         if (!currentUser.isActive) {
-            throw new AppError('Ce compte a été désactivé.', 401);
+            return res.status(401).json({
+                status: 'error',
+                message: 'Ce compte a été désactivé.'
+            });
         }
 
         // 6. Mettre à jour le dernier accès
@@ -62,7 +74,10 @@ exports.protect = async (req, res, next) => {
         next();
     } catch (error) {
         logger.error('Erreur d\'authentification', { error: error.message, ip: req.ip });
-        next(error);
+        return res.status(401).json({
+            status: 'error',
+            message: error.message || 'Erreur d\'authentification'
+        });
     }
 };
 
@@ -76,7 +91,10 @@ exports.restrictTo = (...roles) => {
                 requiredRoles: roles,
                 path: req.path
             });
-            return next(new AppError('Vous n\'avez pas la permission d\'effectuer cette action.', 403));
+            return res.status(403).json({
+                status: 'error',
+                message: 'Vous n\'avez pas la permission d\'effectuer cette action.'
+            });
         }
         next();
     };

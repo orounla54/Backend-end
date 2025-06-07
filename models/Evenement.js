@@ -9,7 +9,7 @@ const evenementSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    dateDebut: {
+    date: {
         type: Date,
         required: true
     },
@@ -18,22 +18,40 @@ const evenementSchema = new mongoose.Schema({
         required: true
     },
     lieu: {
-        type: String
+        type: String,
+        required: true
     },
     categorie: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CategorieEvenement',
         required: true
     },
-    responsable: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
     participants: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+    organisateur: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    statut: {
+        type: String,
+        enum: ['planifie', 'en_cours', 'termine', 'annule'],
+        default: 'planifie'
+    },
+    type: {
+        type: String,
+        enum: ['reunion', 'formation', 'seminaire', 'autre'],
+        required: true
+    },
+    rappel: {
+        type: Boolean,
+        default: false
+    },
+    rappelDate: {
+        type: Date
+    },
     fichiersConducteurs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'FileConducteurEvenement'

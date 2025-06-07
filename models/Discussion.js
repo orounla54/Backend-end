@@ -1,24 +1,47 @@
 const mongoose = require('mongoose');
 
+const messageSchema = new mongoose.Schema({
+    contenu: {
+        type: String,
+        required: true
+    },
+    expediteur: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    lu: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
+}, {
+    timestamps: true
+});
+
 const discussionSchema = new mongoose.Schema({
     titre: {
         type: String,
-        required: true,
-        trim: true
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true
+        required: true
     },
     participants: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }],
-    createdAt: {
-        type: Date,
-        default: Date.now
+    messages: [messageSchema],
+    type: {
+        type: String,
+        enum: ['general', 'projet', 'prive'],
+        default: 'general'
+    },
+    projet: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Projet'
+    },
+    statut: {
+        type: String,
+        enum: ['active', 'archivee'],
+        default: 'active'
     }
 }, {
     timestamps: true

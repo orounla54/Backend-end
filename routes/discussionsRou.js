@@ -1,95 +1,36 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
-const Discussion = require("../models/Discussion");
+const DiscussionController = require("../controllers/discussionsCon");
 
-// Créer une discussion
-router.post("/", auth.protect, async (req, res) => {
-    try {
-        const discussion = new Discussion({
-            content: req.body.content,
-            responsable: req.user.id,
-            tache: req.body.tacheId
-        });
-        await discussion.save();
-        res.status(201).json(discussion);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes principales
+router.get("/", auth.protect, DiscussionController.getAll);
+router.post("/", auth.protect, DiscussionController.create);
+router.get("/:id", auth.protect, DiscussionController.getById);
+router.put("/:id", auth.protect, DiscussionController.update);
+router.delete("/:id", auth.protect, DiscussionController.delete);
 
-// Obtenir toutes les discussions de l'utilisateur connecté
-router.get("/", auth.protect, async (req, res) => {
-    try {
-        const discussions = await Discussion.find({ responsable: req.user.id })
-            .populate('tache')
-            .sort({ createdAt: -1 });
-        res.json(discussions);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes de recherche
+router.get("/search", auth.protect, DiscussionController.search);
 
-// Obtenir toutes les discussions d'une tâche
-router.get("/tache/:tacheId", auth.protect, async (req, res) => {
-    try {
-        const discussions = await Discussion.find({ tache: req.params.tacheId })
-            .populate('responsable', 'username profilePicture')
-            .sort({ createdAt: -1 });
-        res.json(discussions);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les messages
+router.get("/:id/messages", auth.protect, DiscussionController.getMessages);
+router.post("/:id/messages", auth.protect, DiscussionController.addMessage);
+router.delete("/:id/messages/:messageId", auth.protect, DiscussionController.deleteMessage);
 
-// Obtenir une discussion spécifique
-router.get("/:id", auth.protect, async (req, res) => {
-    try {
-        const discussion = await Discussion.findById(req.params.id)
-            .populate('responsable', 'username profilePicture')
-            .populate('tache');
-        if (!discussion) {
-            return res.status(404).json({ message: "Discussion non trouvée" });
-        }
-        res.json(discussion);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les participants
+router.get("/:id/participants", auth.protect, DiscussionController.getParticipants);
+router.post("/:id/participants", auth.protect, DiscussionController.addParticipant);
+router.delete("/:id/participants/:participantId", auth.protect, DiscussionController.removeParticipant);
 
-// Mettre à jour une discussion
-router.put("/:id", auth.protect, async (req, res) => {
-    try {
-        const discussion = await Discussion.findById(req.params.id);
-        if (!discussion) {
-            return res.status(404).json({ message: "Discussion non trouvée" });
-        }
-        if (discussion.responsable.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Non autorisé" });
-        }
-        discussion.content = req.body.content || discussion.content;
-        await discussion.save();
-        res.json(discussion);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les documents
+router.get("/:id/documents", auth.protect, DiscussionController.getDocuments);
+router.post("/:id/documents", auth.protect, DiscussionController.addDocument);
+router.delete("/:id/documents/:docId", auth.protect, DiscussionController.deleteDocument);
 
-// Supprimer une discussion
-router.delete("/:id", auth.protect, async (req, res) => {
-    try {
-        const discussion = await Discussion.findById(req.params.id);
-        if (!discussion) {
-            return res.status(404).json({ message: "Discussion non trouvée" });
-        }
-        if (discussion.responsable.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Non autorisé" });
-        }
-        await discussion.remove();
-        res.json({ message: "Discussion supprimée" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Routes pour les images
+router.get("/:id/images", auth.protect, DiscussionController.getImages);
+router.post("/:id/images", auth.protect, DiscussionController.addImage);
+router.delete("/:id/images/:imageId", auth.protect, DiscussionController.deleteImage);
 
 module.exports = router;

@@ -1,27 +1,27 @@
 const mongoose = require('mongoose');
 
 const typePrioriteSchema = new mongoose.Schema({
-    libelle: {
+    nom: {
         type: String,
         required: true,
         unique: true
     },
-    description: {
-        type: String,
-        required: true
+    niveau: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 5
     },
     couleur: {
         type: String,
-        default: '#000000'
+        required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
+    description: {
+        type: String,
+        required: true
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('TypePriorite', typePrioriteSchema); 
