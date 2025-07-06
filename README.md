@@ -1,229 +1,175 @@
-# WorkNest Backend
+# Backend E2C-TIC
 
-API RESTful et serveur WebSocket pour WorkNest, une plateforme complète de gestion de projets et de collaboration en entreprise. Construit avec Node.js, Express et MongoDB.
-
-## Technologies utilisées
-
-- Node.js
-- Express.js
-- MongoDB avec Mongoose
-- Socket.IO pour la communication en temps réel
-- JWT pour l'authentification
-- Bcrypt pour le hachage des mots de passe
-- Winston pour la gestion des logs
-- Multer pour la gestion des fichiers
-- Cors pour la gestion des CORS
-- Dotenv pour les variables d'environnement
+Ce dossier contient le backend de l'application E2C-TIC, une plateforme de gestion de tâches et de projets.
 
 ## Prérequis
 
-- Node.js (v16 ou supérieur)
+- Node.js (v14 ou supérieur)
 - MongoDB (v4.4 ou supérieur)
 - npm ou yarn
 
-## Configuration
+## Installation
 
-1. Clonez le repository
-2. Installez les dépendances :
+1. Cloner le repository
+```bash
+git clone <repository-url>
+cd e2c-tic/backend
+```
+
+2. Installer les dépendances
 ```bash
 npm install
+# ou
+yarn install
 ```
 
-3. Créez un fichier `.env` à la racine du projet avec les variables suivantes :
+3. Configuration de l'environnement
+Créez un fichier `.env` à la racine du dossier backend avec les variables suivantes :
+
 ```env
 # Configuration du serveur
-PORT=5000
 NODE_ENV=development
+PORT=5000
 
-# Base de données MongoDB
-MONGODB_URI=mongodb://localhost:27017/worknest
+# Configuration de la base de données
+MONGO_URI=mongodb://localhost:27017/e2c-tic
 
-# JWT
+# Configuration JWT
 JWT_SECRET=votre_secret_jwt_super_securise
-JWT_EXPIRES_IN=24h
+JWT_EXPIRE=30d
+JWT_COOKIE_EXPIRE=30
 
-# URLs Frontend
-VITE_BASE_URL_FRONTEND=http://localhost:5173
-
-# Configuration CORS
-CORS_ORIGIN=http://localhost:5173
-
-# Configuration Socket.IO
-SOCKET_PATH=/socket.io/
-SOCKET_PING_TIMEOUT=60000
-SOCKET_PING_INTERVAL=25000
-SOCKET_CONNECT_TIMEOUT=45000
+# Configuration de l'email (optionnel)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_EMAIL=votre_email@gmail.com
+SMTP_PASSWORD=votre_mot_de_passe_application
+FROM_EMAIL=noreply@e2c-tic.com
+FROM_NAME=E2C-TIC
 ```
 
-## Scripts disponibles
+## Démarrage
 
-### Développement
+### Mode développement
 ```bash
 npm run dev
+# ou
+yarn dev
 ```
-Lance le serveur en mode développement avec nodemon
 
-### Production
+### Mode production
 ```bash
 npm start
+# ou
+yarn start
 ```
-Lance le serveur en mode production
-
-### Build
-```bash
-npm run build
-```
-Compile le code TypeScript (si utilisé)
 
 ## Structure du projet
 
 ```
 backend/
-├── config/           # Configuration de l'application
-├── controllers/      # Contrôleurs de l'API
-├── middlewares/      # Middlewares Express
-├── models/          # Modèles Mongoose
-├── routes/          # Routes de l'API
-├── services/        # Services métier
-├── utils/           # Utilitaires
-├── types/           # Types TypeScript (si utilisé)
-├── logs/            # Fichiers de logs
-├── public/          # Fichiers statiques
-├── scripts/         # Scripts utilitaires
-├── app.js           # Configuration Express
-├── server.js        # Point d'entrée du serveur
-└── index.js         # Initialisation de l'application
+├── src/
+│   ├── config/         # Configuration de la base de données
+│   ├── controllers/    # Contrôleurs de l'application
+│   ├── middleware/     # Middlewares personnalisés
+│   ├── models/         # Modèles Mongoose
+│   ├── routes/         # Routes de l'API
+│   ├── utils/          # Utilitaires
+│   └── server.js       # Point d'entrée de l'application
+├── .env               # Variables d'environnement
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-## Modules principaux
+## API Endpoints
 
-### Gestion des Projets
-- `GET /api/projets` - Liste des projets
-- `POST /api/projets` - Créer un projet
-- `GET /api/projets/:id` - Détails d'un projet
-- `PUT /api/projets/:id` - Mettre à jour un projet
-- `DELETE /api/projets/:id` - Supprimer un projet
-- `GET /api/projets/filter` - Filtrer les projets
-- `GET /api/projets/mes-projets` - Projets de l'utilisateur
-- `GET /api/projets/liste-projets` - Liste complète des projets
+### Authentification
+- POST /api/auth/register - Inscription
+- POST /api/auth/login - Connexion
+- GET /api/auth/me - Profil utilisateur
+- POST /api/auth/reset-password - Réinitialisation du mot de passe
 
-### Gestion des Tâches
-- `GET /api/taches` - Liste des tâches
-- `POST /api/taches` - Créer une tâche
-- `GET /api/taches/:id` - Détails d'une tâche
-- `PUT /api/taches/:id` - Mettre à jour une tâche
-- `DELETE /api/taches/:id` - Supprimer une tâche
-- `GET /api/taches/mes-taches` - Tâches de l'utilisateur
-- `GET /api/taches/responsables` - Tâches par responsable
-- `GET /api/taches/types` - Types de tâches
-- `GET /api/taches/roles` - Rôles des tâches
+### Utilisateurs
+- GET /api/users - Liste des utilisateurs (admin)
+- GET /api/users/:id - Détails d'un utilisateur
+- PUT /api/users/:id - Mise à jour d'un utilisateur
+- DELETE /api/users/:id - Suppression d'un utilisateur (admin)
 
-### Sollicitations
-- `GET /api/sollicitations` - Liste des sollicitations
-- `POST /api/sollicitations` - Créer une sollicitation
-- `GET /api/sollicitations/mes-sollicitations` - Sollicitations de l'utilisateur
-- `GET /api/sollicitations/service` - Sollicitations par service
-- `PUT /api/sollicitations/:id/status` - Mettre à jour le statut
+### Services
+- GET /api/services - Liste des services
+- POST /api/services - Création d'un service (admin)
+- GET /api/services/:id - Détails d'un service
+- PUT /api/services/:id - Mise à jour d'un service (admin)
+- DELETE /api/services/:id - Suppression d'un service (admin)
 
-### Discussions et Messages
-- `GET /api/messages` - Liste des messages
-- `POST /api/messages` - Envoyer un message
-- `GET /api/messages/:id` - Détails d'un message
-- `DELETE /api/messages/:id` - Supprimer un message
-- `GET /api/discussions` - Liste des discussions
-- `POST /api/discussions` - Créer une discussion
+### Projets
+- GET /api/projets - Liste des projets
+- POST /api/projets - Création d'un projet
+- GET /api/projets/:id - Détails d'un projet
+- PUT /api/projets/:id - Mise à jour d'un projet
+- DELETE /api/projets/:id - Suppression d'un projet
 
-### Événements et Calendrier
-- `GET /api/evenements` - Liste des événements
-- `POST /api/evenements` - Créer un événement
-- `GET /api/evenements/calendrier` - Événements du calendrier
-- `GET /api/evenements/service` - Événements par service
-- `GET /api/evenements/societe` - Événements de la société
-- `GET /api/evenements/categories` - Catégories d'événements
+### Tâches
+- GET /api/taches - Liste des tâches
+- POST /api/taches - Création d'une tâche
+- GET /api/taches/:id - Détails d'une tâche
+- PUT /api/taches/:id - Mise à jour d'une tâche
+- DELETE /api/taches/:id - Suppression d'une tâche
 
-### Plans Stratégiques
-- `GET /api/plans` - Liste des plans
-- `POST /api/plans` - Créer un plan
-- `GET /api/plans/:id` - Détails d'un plan
-- `PUT /api/plans/:id` - Mettre à jour un plan
-- `DELETE /api/plans/:id` - Supprimer un plan
-- `GET /api/plans/roles` - Rôles des plans
+### Événements
+- GET /api/evenements - Liste des événements
+- POST /api/evenements - Création d'un événement
+- GET /api/evenements/:id - Détails d'un événement
+- PUT /api/evenements/:id - Mise à jour d'un événement
+- DELETE /api/evenements/:id - Suppression d'un événement
 
-### Priorités
-- `GET /api/priorites` - Liste des priorités
-- `POST /api/priorites` - Créer une priorité
-- `GET /api/priorites/mes-priorites` - Priorités de l'utilisateur
-- `GET /api/priorites/service` - Priorités par service
-- `GET /api/priorites/types` - Types de priorités
+### Discussions
+- GET /api/discussions - Liste des discussions
+- POST /api/discussions - Création d'une discussion
+- GET /api/discussions/:id - Détails d'une discussion
+- PUT /api/discussions/:id - Mise à jour d'une discussion
+- DELETE /api/discussions/:id - Suppression d'une discussion
 
-### Administration
-- `GET /api/services` - Gestion des services
-- `GET /api/postes` - Gestion des postes
-- `GET /api/positions` - Gestion des positions
-- `GET /api/responsables` - Gestion des responsables
-- `GET /api/profiles` - Gestion des profils
-- `GET /api/roles` - Gestion des rôles
-
-## WebSocket Events
-
-### Connexion
-- `connection` - Nouvelle connexion client
-- `disconnect` - Déconnexion client
-
-### Messages et Discussions
-- `join_discussion` - Rejoindre une discussion
-- `leave_discussion` - Quitter une discussion
-- `new_message` - Nouveau message
-- `typing` - Notification de frappe
-- `stop_typing` - Fin de frappe
-
-### Notifications
-- `new_notification` - Nouvelle notification
-- `task_update` - Mise à jour de tâche
-- `event_reminder` - Rappel d'événement
-- `priority_change` - Changement de priorité
+### Statistiques
+- GET /api/stats/general - Statistiques générales (admin)
+- GET /api/stats/service/:id - Statistiques d'un service
+- GET /api/stats/user/:id - Statistiques d'un utilisateur
 
 ## Sécurité
 
-- Authentification JWT
-- Hachage des mots de passe avec bcrypt
-- Protection CORS
-- Validation des entrées
-- Rate limiting
-- Gestion sécurisée des fichiers
-- Logs de sécurité
-- Gestion des rôles et permissions
+- Toutes les routes sont protégées par authentification JWT
+- Les mots de passe sont hashés avec bcrypt
+- Protection contre les attaques XSS et CSRF
+- Validation des données avec express-validator
+- Gestion centralisée des erreurs
+- Rate limiting sur les routes d'authentification
 
-## Gestion des erreurs
+## Tests
 
-- Middleware de gestion des erreurs centralisé
-- Logs détaillés avec Winston
-- Réponses d'erreur standardisées
-- Validation des données avec Joi
+Pour exécuter les tests :
+```bash
+npm test
+# ou
+yarn test
+```
 
 ## Déploiement
 
-1. Configurez les variables d'environnement pour la production
-2. Assurez-vous que MongoDB est accessible
-3. Build et démarrage :
+1. Configurer les variables d'environnement pour la production
+2. Construire l'application :
 ```bash
 npm run build
-npm start
+# ou
+yarn build
 ```
-
-## Monitoring
-
-- Logs d'application dans `logs/`
-- Métriques de performance
-- Surveillance des erreurs
-- Monitoring de la base de données
-- Suivi des utilisateurs actifs
-- Métriques de collaboration
+3. Démarrer en mode production :
+```bash
+npm start
+# ou
+yarn start
+```
 
 ## Support
 
-Pour toute question ou problème, veuillez créer une issue sur le repository GitHub.
-
-## Licence
-
-Ce projet est propriétaire et confidentiel. Tous droits réservés. 
+Pour toute question ou problème, veuillez créer une issue dans le repository. 
