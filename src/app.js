@@ -1,7 +1,7 @@
 const cors = require('cors');
 
 const allowedOrigins = [
-  'https://ton-frontend.onrender.com', // Remplace par l'URL Render de ton frontend
+  'https://projet-de-fin-frontend.onrender.com', // Remplace par l'URL Render de ton frontend
   'http://localhost:5173', // Vite
   'http://localhost:3000'  // CRA
 ];
