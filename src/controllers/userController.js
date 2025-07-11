@@ -18,6 +18,14 @@ exports.createResponsable = async (req, res) => {
 
     const { nom, prenom, email, password, departement, idService, idPoste, idPosition } = req.body;
 
+    // Vérification des champs obligatoires
+    if (!nom || !prenom || !email || !password || !departement || !idService || !idPoste || !idPosition) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tous les champs sont obligatoires (nom, prenom, email, password, departement, service, poste, position)'
+      });
+    }
+
     // Vérifier si l'email existe déjà
     const existingUser = await User.findOne({ email });
     if (existingUser) {

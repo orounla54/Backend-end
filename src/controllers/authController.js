@@ -86,6 +86,14 @@ exports.login = async (req, res) => {
       });
     }
 
+    // Vérifier si le compte est actif
+    if (!user.actif) {
+      return res.status(403).json({
+        success: false,
+        message: "Votre compte n'est pas encore activé. Veuillez contacter l'administrateur ou vérifier votre email."
+      });
+    }
+
     // Vérifier le mot de passe
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) {
@@ -110,6 +118,7 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Erreur lors de la connexion:', error);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la connexion',
