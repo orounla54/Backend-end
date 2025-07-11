@@ -75,7 +75,7 @@ app.use(hpp());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? process.env.FRONTEND_URL 
-    : ['https://projet-de-fin-frontend.onrender.com'],
+    : ['http://localhost:5173'],
   credentials: true
 }));
 
