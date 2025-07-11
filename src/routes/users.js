@@ -8,7 +8,8 @@ const {
   deleteUser,
   updateProfile,
   createResponsable,
-  getUsersActifs
+  getUsersActifs,
+  getResponsables
 } = require('../controllers/userController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -38,6 +39,8 @@ router.use(authorize('admin'));
 
 router.route('/')
   .get(getUsers);
+
+router.route('/responsables', getResponsables);
 
 router.route('/:id')
   .get(getUser)

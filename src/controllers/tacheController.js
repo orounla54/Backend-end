@@ -339,6 +339,15 @@ exports.getFilteredTaches = async (req, res) => {
   }
 };
 
+exports.getAllTaches = async (req, res) => {
+  try {
+    const taches = await Tache.find();
+    res.json(taches);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getTypesTaches = (req, res) => {
   const types = ['Réunion', 'Appel', 'Email', 'Développement'];
   res.json({ success: true, data: types });

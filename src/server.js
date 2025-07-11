@@ -32,6 +32,11 @@ const positionRoutes = require('./routes/positions');
 const filterRoutes = require('./routes/filter');
 const featuresRoutes = require('./routes/features');
 const typesTachesRoutes = require('./routes/typesTaches');
+const plansStrategiquesRoutes = require('./routes/plansStrategiques');
+const axesStrategiquesRoutes = require('./routes/axesStrategiques');
+const objectifsStrategiquesRoutes = require('./routes/objectifsStrategiques');
+const objectifsOperationnelsRoutes = require('./routes/objectifsOperationnels');
+const mesuresStrategiquesRoutes = require('./routes/mesuresStrategiques');
 
 const app = express();
 
@@ -70,7 +75,7 @@ app.use(hpp());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? process.env.FRONTEND_URL 
-    : ['http://localhost:3000', 'http://localhost:5173'],
+    : ['https://projet-de-fin-frontend.onrender.com'],
   credentials: true
 }));
 
@@ -89,6 +94,11 @@ app.use('/filter', filterRoutes);
 app.use('/api', featuresRoutes);
 app.use('/api/typesTaches', typesTachesRoutes);
 app.use('/api/filter/typesTaches', typesTachesRoutes);
+app.use('/api/plansStrategiques', plansStrategiquesRoutes);
+app.use('/api/axesStrategiques', axesStrategiquesRoutes);
+app.use('/api/objectifsStrategiques', objectifsStrategiquesRoutes);
+app.use('/api/objectifsOperationnels', objectifsOperationnelsRoutes);
+app.use('/api/mesuresStrategiques', mesuresStrategiquesRoutes);
 
 // Route de test
 app.get('/', (req, res) => {

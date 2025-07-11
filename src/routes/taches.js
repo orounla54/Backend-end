@@ -10,7 +10,8 @@ const {
   addCommentaire,
   addParticipant,
   getFilteredTaches,
-  getTypesTaches
+  getTypesTaches,
+  getAllTaches
 } = require('../controllers/tacheController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -59,5 +60,6 @@ router.get('/filter/taches', getFilteredTaches);
 router.get('/typesTaches', getTypesTaches);
 
 router.get('/ImgsTache/:id', require('../controllers/tacheController').getTacheImages);
+router.get('/all', getAllTaches);
 
 module.exports = router; 
